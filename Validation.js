@@ -15,8 +15,7 @@ export const validateId = (id) =>
   */   
 export const validateName = (nameEchange)=>
     typeof nameEchange === 'string' &&
-    nameEchange &&
-    nameEchange.length >= 5 &&
+    nameEchange.length >= 2 &&
     nameEchange.length <= 200;
 
     /**
@@ -27,18 +26,20 @@ export const validateName = (nameEchange)=>
 export const validateBriques = (briques) =>{
 
     if(Array.isArray(briques)){
+        let check = false;
         for (const brique of briques) {
             const id_brique = brique.id_brique;
             const quantite = brique.quantite;
-
-            if(typeof id_brique === 'number' && !Number.isNaN(id_brique) &&Number.isFinite(id_brique) &&id_brique > 0
-            ){
-                return true;
+            
+            if((typeof id_brique === 'number' && !Number.isNaN(id_brique) && Number.isFinite(id_brique) &&id_brique > 0
+            ) &&(typeof quantite === 'number' && !Number.isNaN(quantite) && Number.isFinite(quantite) && quantite > 0)){
+                check = true;
             }
             else{
-                return false;
-            }
+                check = false  
+           }
         }
+        return check;
     }      
 };
 

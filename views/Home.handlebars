@@ -1,11 +1,15 @@
 <h2>&eacute;changes</h2>
         <ul class="list-group"> 
+            {{#each Exchanges}}
             <li class="echange">
-                <p class="echange_titre">Juste du rouge</p>
-                <span class="echange_nom">Christiansen, Ole Kirk</span>
-                <button id="btn_verifyExchange" class="btn_voir">Voir l'&eacute;change</button>
-                <button class="btn_effacer">X</button>
+                <p class="echange_titre">{{this.nom_echange}}</p>
+                <span class="echange_nom">{{this.utilisateur_nom}}, {{this.utilisateur_prenom}}</span>
+                <button  class="btn_voir" data-id="{{this.id_echange}} ">Voir l'&eacute;change</button>
+                {{!-- <button data-id="{{this.id_echange}}" class="btn_effacer">X</button> --}}
             </li> 
-            
+            {{/each}}
         </ul>
         <button id="btn-createExchange" class="btn_creer">Cr&eacute;er un &eacute;change</button>
+
+
+        
