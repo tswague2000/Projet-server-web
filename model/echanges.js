@@ -7,11 +7,9 @@ import {connexion} from '../db/db.js';
 export async function getAllExchanges() {
     
         const echanges = await connexion.all(
-            `SELECT e.id_echange, e.nom_echange, u.nom AS utilisateur_nom, u.prenom AS utilisateur_prenom, b.nom AS brique_nom, eb.quantite 
+            `SELECT e.id_echange, e.nom_echange, u.nom AS utilisateur_nom, u.prenom AS utilisateur_prenom
             FROM echange e
-            JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
-            LEFT JOIN echange_brique eb ON e.id_echange = eb.id_echange
-            LEFT JOIN brique b ON eb.id_brique = b.id_brique`
+            JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur`
         );
         return echanges;
    
@@ -25,7 +23,8 @@ export async function getAllExchanges() {
 export async function getUserExchanges(id) {
        
         const requete = 
-            `SELECT e.id_echange, e.nom_echange, u.nom AS nom_utilisateur
+            `SELECT e.id_echange, e.nom_echange, u.nom AS nom_utilisateur, u.prenom
+
                 FROM echange e
                 JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
                 WHERE e.id_utilisateur = ?
@@ -56,10 +55,14 @@ export async function deleteEchange(echangeId) {
  * @returns {briques} les briques
  */
 export async function getAllBriques() {
-    
-    const briques = await connexion.all(`SELECT id_brique, nom, image, valeur FROM brique`);
+    const briques = await connexion.all(`
+        SELECT brique.id_brique, brique.nom, brique.image, brique.valeur, couleur.nom AS couleur
+        FROM brique
+        LEFT JOIN couleur ON brique.id_couleur = couleur.id_couleur
+    `);
     return briques;
 };
+
 
 
 /**
@@ -96,31 +99,55 @@ export async function createExchange(nomEchange, briques) {
  * @param {number} idEchange 
  * @returns un tableau des détails de l'échange
  */
-export async function getEchangeDetails(idEchange){
-  const result = await connexion.all(
-    `
-    SELECT 
-            e.nom_echange AS nomEchange,
-            u.nom AS nomUtilisateur,
-            u.prenom AS prenomUtilisateur,
-            b.nom AS nomBrique,
-            b.image AS imageBrique,
-            eb.quantite AS quantiteBrique
-        FROM echange e
-        JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
-        JOIN echange_brique eb ON e.id_echange = eb.id_echange
-        JOIN brique b ON eb.id_brique = b.id_brique
-        WHERE e.id_echange = ?
-    `,[idEchange]
-  );
-  return result.map(row => ({
-    nomEchange: row.nomEchange,
-    nomUtilisateur: `${row.prenomUtilisateur} ${row.nomUtilisateur}`,
-    nomBrique: row.nomBrique,
-    imageBrique: row.imageBrique,
-    quantiteBrique: row.quantiteBrique
-})) || [];
+export async function getEchangeDetails(idEchange) {
+    const result = await connexion.all(
+        `
+        SELECT 
+                e.nom_echange AS nomEchange,
+                u.nom AS nomUtilisateur,
+                u.prenom AS prenomUtilisateur,
+                b.nom AS nomBrique,
+                b.image AS imageBrique,
+                b.valeur AS valeurBrique,
+                eb.quantite AS quantiteBrique
+            FROM echange e
+            JOIN utilisateur u ON e.id_utilisateur = u.id_utilisateur
+            JOIN echange_brique eb ON e.id_echange = eb.id_echange
+            JOIN brique b ON eb.id_brique = b.id_brique
+            WHERE e.id_echange = ?
+        `, [idEchange]
+    );
+
+    const valeurglobale = await calculValeurGlobaleApprox(idEchange)
+
+    const echanges =  result.reduce((acc, row) => {
+        // Vérifie si l'échange existe déjà dans le tableau accumulé
+        let echange = acc.find(e => e.nomEchange === row.nomEchange);
+        
+        if (!echange) {
+            echange = {
+                nomEchange: row.nomEchange,
+                nomUtilisateur: `${row.prenomUtilisateur} ${row.nomUtilisateur}`,
+                briques: [],
+                valeurGlobale : valeurglobale
+            };
+            acc.push(echange);
+        }
+        
+        // Ajoute la brique actuelle au tableau des briques de cet échange
+        echange.briques.push({
+            nomBrique: row.nomBrique,
+            imageBrique: row.imageBrique,
+            quantiteBrique: row.quantiteBrique,
+            valeurBrique : row.valeurBrique
+        });
+        
+        return acc;
+    }, []);
+
+    return echanges;
 };
+
 
 /**
  * fonction permettant de faire le calcul de la valeur approximmative de l'échange

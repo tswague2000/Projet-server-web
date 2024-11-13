@@ -30,43 +30,50 @@ app.use('/assets', express.static('assets'));
 // route pour la generation de la page d'accueil 
 app.get('/', async (request, response) => {
 
-
     response.render('Home', {
         titre: 'Accueil',
         styles: [''],
-        scripts :['/js/Home.js']
+        scripts :['/js/Home.js'],
+        Exchanges: await getAllExchanges()
     });
 });
 
-// route pour la generation de la page contenant tout les échanges du compte courant
+// route pour la generation de la page html contenant tout les échanges du compte courant
 app.get('/echangesUser', async (request, response) => {
 
-
+    const id = 1;
     response.render('profil', {
         titre: 'Échanges Utilisateur',
-        styles: ['/css/profil.css'],
-        scripts :['/js/profil.js']
+        styles: ['/css/Profil.css'],
+        scripts :['/js/profil.js'],
+        exchangesUser: await getUserExchanges(id)
+      
     });
 });
 
-// route pour la generation de la page permettant de creer un échange
+// route pour voir l'échanges
+
+// route pour la generation de la page html permettant de creer un échange
 app.get('/createEchange', async (request, response) => {
 
 
     response.render('createEchange', {
         titre: 'Création de l\'échange',
         styles: ['/css/createEchange.css'],
-        scripts :['/js/createEchange.js']
+        scripts :['/js/createEchange.js'],
+        Briques : await getAllBriques()
     });
 });
-// route pour la generation de la page pour voir un échange  spécifique
-app.get('/echange', async (request, response) => {
+// route pour la generation de la page html pour voir un échange  spécifique
+app.get('/echange/:id', async (request, response) => {
+        const id = request.params.id;
 
 
     response.render('echange', {
         titre: 'Échange',
         styles: ['/css/echange.css'],
-        scripts :['/js/echange.js']
+        scripts :['/js/echange.js'],
+        Exchange : await getEchangeDetails(id) 
     });
 });
 
@@ -103,7 +110,7 @@ app.get('/api/echangesUser/:id', async (req, res) => {
 
 
 // route pour suppression d'un échnage
-app.delete('/api/echangeUser/:id', async (req, res) => {
+app.delete('/api/echange/:id', async (req, res) => {
     
     const id = req.params.id;
 
@@ -134,10 +141,11 @@ app.get('/api/briques', async (req, res) => {
 });
 
 // Route pour créer un échange
-app.post('/api/echanges', async (req, res) => {
+app.post('/api/echange', async (req, res) => {
 
     const name = req.body.nameEchange; 
     const briques = req.body.briques; 
+   
     if(validateName(name) && validateBriques(briques)){
         const echangeId = await createExchange(name, briques);
         res.status(201).json({ message: "Échange créé avec succès", echangeId });
