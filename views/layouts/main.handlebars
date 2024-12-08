@@ -19,10 +19,22 @@
       <a href="/">
         <img id="logo-link" src="/assets/logo.png" alt="">
       </a>
-            
+            {{#if user}}
         <a href="/echangesUser" class="lien_profile">
+        <span>{{user.prenom}} {{user.nom}}</span>
         <i id="img-link" class="fa-regular fa-user"></i>
         </a>
+        {{/if }}
+        <div class="btn-log">
+            {{#unless user}}
+            <button id="btn-connexion">Connexion</button>
+            {{/unless}}
+            {{#if user}}
+           <form method="post" action="/api/deconnexion">
+                 <input id="deconnexion" type="submit" value="Déconnexion">
+            </form>
+            {{/if}}
+        </div>
     </header>
 
     </header>

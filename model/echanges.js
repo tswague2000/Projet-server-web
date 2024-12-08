@@ -17,7 +17,7 @@ export async function getAllExchanges() {
 
 /**
  * fontction permettant de retouver les echanges d'un utilisatuer spécifié
- * @returns l'echange de l'utilisateur 1
+ * @returns l'echange de l'utilisateur connecté
  */
 
 export async function getUserExchanges(id) {
@@ -35,6 +35,10 @@ export async function getUserExchanges(id) {
     
 };
 
+
+
+
+
 /**
  * fonction permettant de supprimer un échange se trouvant dans la table échange
  * @param {number} echangeId  suppression d'un echanges
@@ -42,10 +46,9 @@ export async function getUserExchanges(id) {
 
 export async function deleteEchange(echangeId) {
    
-        const requete = 
-            `DELETE FROM echange WHERE id_echange = ?`;
-        
-        const result = await connexion.run(requete, 
+     const result = await connexion.run(
+            `DELETE FROM echange WHERE id_echange = ?;
+            DELETE FROM echange_brique WHERE id_echange = ?`, 
             [echangeId]);
         return result.changes > 0;    
 };
@@ -71,11 +74,11 @@ export async function getAllBriques() {
  * @param {Array} briques  Liste des briques à échanger avec leur ID et quantité
  * @returns {number} retourne l'id de l'échange créé
  */
-export async function createExchange(nomEchange, briques) {
+export async function createExchange(id,nomEchange, briques) {
     
         const requete = `INSERT INTO echange (id_utilisateur, nom_echange) VALUES (?, ?)`;
         const result = await connexion.run(
-            requete,[1, nomEchange]
+            requete,[id, nomEchange]
         );
 
         const exchangeId = result.lastID;

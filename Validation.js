@@ -44,5 +44,68 @@ export const validateBriques = (briques) =>{
 };
 
 
+export const validateCourriel = (courriel) => 
+    typeof courriel === 'string' &&
+    courriel.trim() !== '' &&
+    /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-z]{2,10}$/g.test(courriel);
+
+
+export const validatePrenom = function(prenom){
+    // if ( typeof prenom !== 'string') {
+    //     return ;
+    // }
+    // else{
+    //     const regex = /^[A-Za-zÀ-ÿ]+(?:[- ][A-Za-zÀ-ÿ]+)*$/;
+    // const prenomValide = regex.test(prenom);
+    //     return prenomValide;
+    // }
+    return true;
+} 
+
+export const validateMotDePasse = function(motdepasse) {
+        // let check = false;
+        // const password = motdepasse.trim();
+        // if(password === ''){
+        //     return check;
+        // }
+        // // au moins 5 caractères dans le mot de passe
+        // else if(password.length < 5){
+        //     return check;
+        // }
+    
+        // // au moins 1 majuscule
+        // else if(!/[A-Z]/.test(password)){
+        //     return check;
+        // }
+        // // au moin 1 minuscule
+        // else if(!/[a-z]/.test(password)){
+        //     return check;
+        // }
+        // // au moins un chiffre
+        // else if(!/[0-9]/.test(password)){
+        //     return check;
+        // }
+        // // mot de passe valide
+        // else{
+        //     return check = true;
+        // }  
+        return true;
+};
+
+export const validateNom = function(nom){
+//     let check = false;
+//     if(typeof nom !== 'string'){
+//         return check;
+//     }
+//     else if(nom.length > 2 && nom.length <= 30){
+//         return check;
+//     }
+//     else{
+//         return check= true;
+//     }
+return true;
+}
+    
+
 
 

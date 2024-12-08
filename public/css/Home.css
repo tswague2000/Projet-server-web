@@ -16,6 +16,9 @@ body {
 
 
 header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: baseline;
     background-color: #ffc107;
     padding: 1rem;
     text-align: left; 
@@ -54,11 +57,37 @@ header {
 
 header .lien_profile {
     position: absolute;
-    right: 5rem; 
-    top: 2rem;
+    right: 12rem; 
+    top: 2.5rem;
     color: #000000;
     font-weight: bold;
     text-decoration: none;
+}
+header .btn-log{
+    display: flex;
+    position: absolute;
+    right: 5rem;
+    top: 2.5rem;
+    border: none;
+}
+#deconnexion{
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    margin-left: 10px;
+    border: none;
+    color: white;
+    background-color: #e84a27;
+}
+
+.btn-log button{
+    width: 100px;
+    height: 40px;
+    border-radius: 5px;
+    border: none;
+    color: white;
+    background-color: #e84a27;
+    
 }
 
 
@@ -118,6 +147,7 @@ main {
     font-size: 1rem;
     text-align: center;
     border-radius: 10px;
+    text-decoration: none;
 }
 
 
