@@ -42,7 +42,9 @@ async function createDatabase(connexion) {
         CREATE TABLE proposition (
             id_proposition INTEGER PRIMARY KEY,
             id_echange INTEGER NOT NULL,
-            FOREIGN KEY(id_echange) REFERENCES echange(id_echange)
+            id_utilisateur INTEGER NOT NULL,
+            FOREIGN KEY(id_echange) REFERENCES echange(id_echange),
+            FOREIGN KEY(id_utilisateur) REFERENCES utilisateur(id_utilisateur)
         );
         
         CREATE TABLE echange_brique (

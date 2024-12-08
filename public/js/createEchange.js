@@ -3,6 +3,7 @@
 const button = document.getElementById('create_exchange');
 const inputNom = document.getElementById('input_nomExchange');
 const inputQuantite = document.querySelectorAll('.input_quantite');
+const span = document.getElementById('span-text');
 // preparation des donnéee
 let data = {
     briques : []
@@ -33,6 +34,7 @@ button.addEventListener('click', async function(){
             data.nameEchange = inputNom.value;
         }
     }
+   
     if(data.briques.length !== 0){
         const response = await fetch('/api/echange', {
             method: 'POST',

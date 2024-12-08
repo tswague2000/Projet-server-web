@@ -3,6 +3,9 @@
     padding: 0;
     box-sizing: border-box;
 }
+#span-text{
+    color: #f44336;
+}
 
 body {
     font-family: Arial, sans-serif;
